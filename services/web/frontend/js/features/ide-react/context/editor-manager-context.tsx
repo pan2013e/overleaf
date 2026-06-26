@@ -235,7 +235,8 @@ export const EditorManagerProvider: FC<React.PropsWithChildren> = ({
         }
         if (
           update.meta.type === 'external' &&
-          update.meta.source === 'git-bridge'
+          (update.meta.source === 'git-bridge' ||
+            update.meta.source === 'codex')
         ) {
           return
         }

@@ -180,6 +180,333 @@ body {
   }
 }
 
+.codex-panel {
+  background: var(--bg-primary-themed);
+  color: var(--content-primary-themed);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.codex-panel-header {
+  align-items: center;
+  border-bottom: 1px solid var(--border-divider-themed);
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-03) var(--spacing-04);
+}
+
+.codex-panel-title,
+.codex-panel-actions,
+.codex-button-row,
+.codex-tabs,
+.codex-diff-actions {
+  align-items: center;
+  display: flex;
+}
+
+.codex-panel-title {
+  gap: var(--spacing-02);
+}
+
+.codex-panel-actions,
+.codex-button-row,
+.codex-diff-actions {
+  gap: var(--spacing-02);
+}
+
+.codex-status-label {
+  @include body-sm;
+
+  background: var(--bg-tertiary-themed);
+  border-radius: var(--border-radius-base);
+  color: var(--content-secondary-themed);
+  padding: var(--spacing-01) var(--spacing-02);
+
+  &.status-applied {
+    background: var(--green-10);
+    color: var(--green-70);
+  }
+
+  &.status-failed,
+  &.status-apply_failed {
+    background: var(--red-10);
+    color: var(--red-70);
+  }
+}
+
+.codex-icon-button {
+  color: var(--content-secondary-themed);
+  line-height: 1;
+  padding: var(--spacing-01);
+}
+
+.codex-workbench {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-rows: minmax(56px, 112px) minmax(0, 1fr);
+  min-height: 0;
+}
+
+.codex-session-list {
+  border-bottom: 1px solid var(--border-divider-themed);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--spacing-02);
+}
+
+.codex-session {
+  background: transparent;
+  border: 0;
+  border-radius: var(--border-radius-base);
+  color: var(--content-primary-themed);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-01);
+  min-height: 48px;
+  padding: var(--spacing-02);
+  text-align: left;
+
+  span,
+  small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  small {
+    color: var(--content-secondary-themed);
+  }
+
+  &:hover,
+  &.active {
+    background: var(--bg-secondary-themed);
+  }
+}
+
+.codex-session-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.codex-tabs {
+  border-bottom: 1px solid var(--border-divider-themed);
+  flex: 0 0 auto;
+  padding: var(--spacing-02) var(--spacing-03) 0;
+}
+
+.codex-tab {
+  @include body-sm;
+
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--content-secondary-themed);
+  padding: var(--spacing-02) var(--spacing-03);
+
+  &.active {
+    border-color: var(--link-ui);
+    color: var(--content-primary-themed);
+  }
+}
+
+.codex-activity,
+.codex-diff-view,
+.codex-settings-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--spacing-03);
+}
+
+.codex-activity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-03);
+}
+
+.codex-prompt-card {
+  @include body-sm;
+
+  background: var(--bg-secondary-themed);
+  border: 1px solid var(--border-divider-themed);
+  border-radius: var(--border-radius-base);
+  padding: var(--spacing-03);
+  white-space: pre-wrap;
+}
+
+.codex-run-error {
+  @include body-sm;
+
+  margin-bottom: 0;
+
+  pre {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    margin: var(--spacing-02) 0 0;
+    overflow-wrap: anywhere;
+    padding: 0;
+    white-space: pre-wrap;
+  }
+}
+
+.codex-prompt-meta,
+.codex-trajectory-title {
+  align-items: center;
+  color: var(--content-secondary-themed);
+  display: flex;
+  gap: var(--spacing-02);
+  justify-content: space-between;
+}
+
+.codex-trajectory-entry {
+  @include body-sm;
+
+  display: grid;
+  gap: var(--spacing-02);
+  grid-template-columns: 20px minmax(0, 1fr);
+
+  .material-symbols {
+    color: var(--content-secondary-themed);
+    font-size: 18px;
+    line-height: 20px;
+  }
+
+  &.error .material-symbols {
+    color: var(--red-60);
+  }
+
+  pre {
+    background: var(--bg-secondary-themed);
+    border: 1px solid var(--border-divider-themed);
+    border-radius: var(--border-radius-base);
+    color: var(--content-primary-themed);
+    margin: var(--spacing-02) 0 0;
+    max-height: 180px;
+    overflow: auto;
+    padding: var(--spacing-02);
+    white-space: pre-wrap;
+  }
+}
+
+.codex-trajectory-title strong {
+  color: var(--content-primary-themed);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.codex-command {
+  display: block;
+  margin-top: var(--spacing-02);
+  overflow-wrap: anywhere;
+}
+
+.codex-change-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-02);
+}
+
+.codex-change {
+  @include body-sm;
+
+  align-items: flex-start;
+  background: var(--bg-secondary-themed);
+  border: 1px solid var(--border-divider-themed);
+  border-radius: var(--border-radius-base);
+  display: flex;
+  gap: var(--spacing-02);
+  margin-bottom: 0;
+  padding: var(--spacing-02);
+
+  span {
+    flex: 1 1 auto;
+    overflow-wrap: anywhere;
+  }
+
+  small {
+    color: var(--content-secondary-themed);
+  }
+}
+
+.codex-diff {
+  @include body-sm;
+
+  background: var(--bg-secondary-themed);
+  border: 1px solid var(--border-divider-themed);
+  border-radius: var(--border-radius-base);
+  color: var(--content-primary-themed);
+  flex: 1 1 auto;
+  min-height: 160px;
+  overflow: auto;
+  padding: var(--spacing-03);
+  white-space: pre-wrap;
+}
+
+.codex-diff-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-03);
+}
+
+.codex-diff-actions {
+  flex: 0 0 auto;
+  justify-content: flex-end;
+}
+
+.codex-apply-note,
+.codex-empty-state {
+  @include body-sm;
+
+  color: var(--content-secondary-themed);
+}
+
+.codex-settings-grid {
+  display: grid;
+  gap: var(--spacing-03);
+  grid-template-columns: minmax(0, 1fr);
+
+  label {
+    @include body-sm;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-01);
+    margin: 0;
+  }
+}
+
+.codex-checkbox-setting {
+  align-items: center;
+  flex-direction: row !important;
+}
+
+.codex-composer {
+  border-top: 1px solid var(--border-divider-themed);
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: var(--spacing-02);
+  padding: var(--spacing-03);
+
+  textarea {
+    resize: vertical;
+  }
+
+  .btn {
+    align-items: center;
+    display: inline-flex;
+    gap: var(--spacing-01);
+  }
+}
+
 .ide-rail-overflow-dropdown {
   min-width: 0;
   background-color: var(--ide-rail-background);

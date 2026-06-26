@@ -9,6 +9,7 @@ import {
 import FileTreeOutlinePanel from '@/features/file-tree/components/file-tree-outline-panel'
 import ChatPane from '@/features/chat/components/chat-pane'
 import ChatIndicator from '@/features/chat/components/chat-indicator'
+import CodexPanel from '@/features/codex/components/codex-panel'
 import getMeta from '@/utils/meta'
 import classNames from 'classnames'
 import IntegrationsPanel from '@/features/integrations-panel/integrations-panel'
@@ -71,7 +72,7 @@ export const RailLayout = () => {
   const { features } = useProjectContext()
   const { isRestrictedTokenMember } = useEditorContext()
   const gitBridgeEnabled = getMeta('ol-gitBridgeEnabled')
-  const { isOverleaf } = getMeta('ol-ExposedSettings')
+  const { codexEnabled, isOverleaf } = getMeta('ol-ExposedSettings')
 
   const { view, setLeftMenuShown, focusMode } = useLayoutContext()
 
@@ -139,6 +140,14 @@ export const RailLayout = () => {
           !getMeta('ol-capabilities')?.includes('chat') ||
           isRestrictedTokenMember,
       },
+      {
+        key: 'codex',
+        icon: 'smart_toy',
+        title: 'Codex',
+        component: <CodexPanel />,
+        hide: !codexEnabled,
+        disabled: view !== 'editor',
+      },
       ...moduleRailEntries,
     ],
     [
@@ -147,6 +156,7 @@ export const RailLayout = () => {
       view,
       isRestrictedTokenMember,
       isOverleaf,
+      codexEnabled,
       gitBridgeEnabled,
     ]
   )
