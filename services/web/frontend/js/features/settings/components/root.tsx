@@ -23,6 +23,7 @@ import OLCol from '@/shared/components/ol/ol-col'
 import OLPageContentCard from '@/shared/components/ol/ol-page-content-card'
 import { isSplitTestEnabled } from '@/utils/splitTestUtils'
 import NotificationsSection from './notifications-section'
+import CodexAccountSettings from '@/features/codex/components/codex-account-settings'
 
 function SettingsPageRoot() {
   const { isReady } = useWaitForI18n()
@@ -67,6 +68,7 @@ function SettingsPageContent() {
           </OLRow>
           <hr />
           <SecuritySection />
+          <CodexAccountSettings />
           <SSOProvider>
             <LinkingSection />
           </SSOProvider>

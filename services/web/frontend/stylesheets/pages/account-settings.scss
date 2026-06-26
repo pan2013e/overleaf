@@ -116,6 +116,37 @@
   }
 }
 
+.codex-settings-widget {
+  .material-symbols {
+    font-size: 40px;
+    line-height: 40px;
+  }
+}
+
+.codex-settings-actions {
+  display: flex;
+  flex-flow: row wrap;
+  gap: var(--spacing-03);
+}
+
+.codex-device-login {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-02);
+  margin-top: var(--spacing-03);
+}
+
+.codex-device-code {
+  background: var(--bg-light-secondary);
+  border: 1px solid var(--border-divider);
+  border-radius: var(--border-radius-base);
+  display: inline-block;
+  font-family: var(--font-family-monospace);
+  font-size: var(--font-size-05);
+  padding: var(--spacing-02) var(--spacing-03);
+  width: fit-content;
+}
+
 @include media-breakpoint-down(md) {
   .settings-widget-container {
     grid-template-columns: 1fr;
