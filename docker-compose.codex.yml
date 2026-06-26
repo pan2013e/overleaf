@@ -1,0 +1,15 @@
+services:
+  sharelatex:
+    image: overleaf-codex:local
+    environment:
+      OVERLEAF_CODEX_ENABLED: "true"
+      OVERLEAF_CODEX_DATA_DIR: /var/lib/overleaf/codex
+      OVERLEAF_CODEX_HOST_CREDENTIALS_HOME: /host-codex-home
+      OVERLEAF_CODEX_SANDBOX_MODE: danger-full-access
+      OVERLEAF_CODEX_AUTO_APPLY: "true"
+      OVERLEAF_INVITE_TOKEN_SECRET: "local-codex-smoke-invite-token-secret-change-me"
+      SANDBOXED_COMPILES: "false"
+      DOCKER_RUNNER: "false"
+      SANDBOXED_COMPILES_SIBLING_CONTAINERS: "false"
+    volumes:
+      - ${OVERLEAF_CODEX_HOST_CREDENTIALS_SOURCE:-/tmp/overleaf-codex-home}:/host-codex-home:rw
