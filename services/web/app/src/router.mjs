@@ -35,6 +35,7 @@ import ExportsController from './Features/Exports/ExportsController.mjs'
 import PasswordResetRouter from './Features/PasswordReset/PasswordResetRouter.mjs'
 import StaticPagesRouter from './Features/StaticPages/StaticPagesRouter.mjs'
 import ChatController from './Features/Chat/ChatController.mjs'
+import CodexRouter from './Features/Codex/CodexRouter.mjs'
 import Modules from './infrastructure/Modules.mjs'
 import {
   RateLimiter,
@@ -304,6 +305,7 @@ async function initialize(webRouter, privateApiRouter, publicApiRouter) {
   UserMembershipRouter.apply(webRouter)
   TokenAccessRouter.apply(webRouter)
   HistoryRouter.apply(webRouter, privateApiRouter)
+  CodexRouter.apply(webRouter)
 
   await Modules.applyRouter(webRouter, privateApiRouter, publicApiRouter)
 

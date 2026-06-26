@@ -818,6 +818,39 @@ module.exports = {
     userId: process.env.SMOKE_TEST_USER_ID,
   },
 
+  codex: {
+    enabled: process.env.OVERLEAF_CODEX_ENABLED === 'true',
+    bin: process.env.OVERLEAF_CODEX_BIN || 'codex',
+    dataDir:
+      process.env.OVERLEAF_CODEX_DATA_DIR ||
+      Path.resolve(__dirname, '../data/codex'),
+    hostCredentialsHome: process.env.OVERLEAF_CODEX_HOST_CREDENTIALS_HOME,
+    appServerRequestTimeoutMs: intFromEnv(
+      'OVERLEAF_CODEX_APP_SERVER_REQUEST_TIMEOUT_MS',
+      30 * seconds
+    ),
+    appServerIdleTimeoutMs: intFromEnv(
+      'OVERLEAF_CODEX_APP_SERVER_IDLE_TIMEOUT_MS',
+      30 * minutes
+    ),
+    workspaceTtlMs: intFromEnv(
+      'OVERLEAF_CODEX_WORKSPACE_TTL_MS',
+      24 * 60 * minutes
+    ),
+    runTimeoutMs: intFromEnv('OVERLEAF_CODEX_RUN_TIMEOUT_MS', 10 * minutes),
+    model: process.env.OVERLEAF_CODEX_MODEL,
+    reasoningEffort: process.env.OVERLEAF_CODEX_REASONING_EFFORT || 'medium',
+    reasoningSummary: process.env.OVERLEAF_CODEX_REASONING_SUMMARY || 'auto',
+    approvalPolicy: process.env.OVERLEAF_CODEX_APPROVAL_POLICY || 'never',
+    sandboxMode: process.env.OVERLEAF_CODEX_SANDBOX_MODE || 'workspace-write',
+    autoApply: process.env.OVERLEAF_CODEX_AUTO_APPLY !== 'false',
+    maxDocs: intFromEnv('OVERLEAF_CODEX_MAX_DOCS', 200),
+    maxProjectBytes: intFromEnv(
+      'OVERLEAF_CODEX_MAX_PROJECT_BYTES',
+      2 * 1024 * 1024
+    ),
+  },
+
   appName: process.env.APP_NAME || 'Overleaf (Community Edition)',
 
   adminEmail: process.env.ADMIN_EMAIL || 'placeholder@example.com',

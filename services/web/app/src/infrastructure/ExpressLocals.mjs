@@ -367,6 +367,7 @@ export default async function (webRouter, privateApiRouter, publicApiRouter) {
     res.locals.ExposedSettings = {
       isOverleaf: Settings.overleaf != null,
       appName: Settings.appName,
+      codexEnabled: Settings.codex?.enabled === true,
       adminEmail: Settings.adminEmail,
       dropboxAppName:
         Settings.apis.thirdPartyDataStore?.dropboxAppName || 'Overleaf',

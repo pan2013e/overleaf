@@ -4,7 +4,9 @@
 # ---------------------------------------------
 
 ARG OVERLEAF_BASE_TAG=sharelatex/sharelatex-base:latest
+ARG CODEX_NPM_PACKAGE=@openai/codex
 FROM $OVERLEAF_BASE_TAG
+ARG CODEX_NPM_PACKAGE=@openai/codex
 
 WORKDIR /overleaf
 
@@ -18,7 +20,7 @@ COPY server-ce/genScript.js server-ce/services.js /overleaf/
 # Corepack setup, shared between all the images.
 ENV PATH="/overleaf/node_modules/.bin:$PATH"
 ENV COREPACK_HOME=/opt/corepack
-RUN corepack enable && corepack install -g yarn@4.14.1
+RUN corepack enable && corepack prepare yarn@4.14.1 --activate
 ENV COREPACK_ENABLE_NETWORK=0
 
 # Install yarn dependencies
@@ -27,6 +29,9 @@ RUN --mount=type=cache,target=/root/.cache \
     --mount=type=cache,target=/root/.yarn/berry/cache,id=server-ce-yarn-cache \
     --mount=type=cache,target=/usr/local/share/.cache/yarn,id=server-ce-yarn-fallback-cache \
     --mount=type=tmpfs,target=/tmp node genScript install | bash
+
+# Install Codex App Server runtime for the optional Overleaf Codex integration.
+RUN npm install -g "$CODEX_NPM_PACKAGE"
 
 # Add the actual source files
 # ---------------------------
