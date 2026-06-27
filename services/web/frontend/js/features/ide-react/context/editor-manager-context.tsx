@@ -233,10 +233,16 @@ export const EditorManagerProvider: FC<React.PropsWithChildren> = ({
         if (ignoringExternalUpdatesRef.current) {
           return
         }
+        const source = update.meta.source as unknown
         if (
           update.meta.type === 'external' &&
           (update.meta.source === 'git-bridge' ||
-            update.meta.source === 'codex')
+            update.meta.source === 'codex' ||
+            (typeof source === 'object' &&
+              source != null &&
+              'kind' in source &&
+              source.kind === 'codex') ||
+            update.meta.origin?.kind === 'codex')
         ) {
           return
         }

@@ -7,11 +7,13 @@ import { getBackgroundColorForUserId } from '@/shared/utils/colors'
 type UserNameWithColoredBadgeProps = {
   currentUserId: string
   user: Nullable<User | { id: string; displayName: string }>
+  suffix?: string
 }
 
 function UserNameWithColoredBadge({
   user,
   currentUserId,
+  suffix,
 }: UserNameWithColoredBadgeProps) {
   const { t } = useTranslation()
   let allowBrowserTranslate = true
@@ -40,6 +42,7 @@ function UserNameWithColoredBadge({
         translate={allowBrowserTranslate ? 'yes' : 'no'}
       >
         {userName}
+        {suffix}
       </span>
     </>
   )

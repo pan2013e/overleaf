@@ -13,6 +13,8 @@ function MetadataUsersList({
   currentUserId,
 }: MetadataUsersListProps) {
   const { t } = useTranslation()
+  const userSuffix =
+    origin?.kind === 'codex' ? ' (Co-authored by Codex)' : undefined
 
   return (
     <ol
@@ -21,7 +23,11 @@ function MetadataUsersList({
     >
       {users.map((user, index) => (
         <li key={index}>
-          <UserNameWithColoredBadge user={user} currentUserId={currentUserId} />
+          <UserNameWithColoredBadge
+            user={user}
+            currentUserId={currentUserId}
+            suffix={userSuffix}
+          />
         </li>
       ))}
       {!users.length && (
@@ -34,6 +40,7 @@ function MetadataUsersList({
           origin?.kind === 'history-migration'
             ? t('overleaf_history_system')
             : t('anonymous')}
+          {userSuffix}
         </li>
       )}
     </ol>

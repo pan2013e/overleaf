@@ -12,7 +12,7 @@ export interface Meta {
   start_ts: number
   end_ts: number
   type?: 'external' // TODO
-  source?: 'git-bridge' // TODO
+  source?: 'git-bridge' | 'codex' // TODO
   origin?:
     | {
         kind:
@@ -22,6 +22,7 @@ export interface Meta {
           | 'github'
           | 'history-resync'
           | 'history-migration'
+          | 'codex'
       }
     | {
         kind: 'file-restore'
