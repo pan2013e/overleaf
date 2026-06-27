@@ -1,0 +1,15 @@
+services:
+  sharelatex:
+    # Host port 80 can be intercepted by the macOS/OrbStack host environment.
+    # Keep the default mapping and add an explicit development URL.
+    ports:
+      - 8080:80
+    # Codex workspace-write sandboxing needs unprivileged user namespaces. The
+    # default Docker seccomp profile blocks the namespace syscall on OrbStack.
+    security_opt:
+      - seccomp=unconfined
+
+  mongo:
+    # OrbStack currently exposes a Linux 6.19+ kernel; mongo:8.0 can resolve to
+    # an image that refuses to start on that kernel. Pin to a compatible 8.0.x.
+    image: mongo:8.0.17

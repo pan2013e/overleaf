@@ -1,80 +1,125 @@
-<h1 align="center">
-  <br>
-  <a href="https://www.overleaf.com"><img src="doc/logo.png" alt="Overleaf" width="300"></a>
-</h1>
+# Overleaf With Codex
 
-<h4 align="center">An open-source online real-time collaborative LaTeX editor.</h4>
+An AI-assisted fork of Overleaf Community Edition for writing, editing, and
+maintaining LaTeX projects with Codex directly inside the editor.
 
-<p align="center">
-  <a href="https://github.com/overleaf/overleaf/wiki">Wiki</a> •
-  <a href="https://www.overleaf.com/for/enterprises">Server Pro</a> •
-  <a href="#contributing">Contributing</a> •
-  <a href="https://mailchi.mp/overleaf.com/community-edition-and-server-pro">Mailing List</a> •
-  <a href="#authors">Authors</a> •
-  <a href="#license">License</a>
-</p>
+This fork keeps the familiar Overleaf editing experience and adds a modern
+Codex workspace: chat with your project, apply changes automatically, review
+structured diffs, bring in selected editor or PDF context, and manage source
+control without leaving the document.
 
-<img src="doc/screenshot.png" alt="A screenshot of a project being edited in Overleaf Community Edition">
-<p align="center">
-  Figure 1: A screenshot of a project being edited in Overleaf Community Edition.
-</p>
+> This project is based on
+> [Overleaf Community Edition](https://github.com/overleaf/overleaf). For the
+> original project, official installation flow, and upstream documentation, see
+> the [Overleaf repository](https://github.com/overleaf/overleaf),
+> [Overleaf Toolkit](https://github.com/overleaf/toolkit/), and
+> [official docs](https://docs.overleaf.com/).
 
-## Community Edition
+## Why This Fork
 
-[Overleaf](https://www.overleaf.com) is an open-source online real-time collaborative LaTeX editor. We run a hosted version at [www.overleaf.com](https://www.overleaf.com), but you can also run your own local version, and contribute to the development of Overleaf.
+LaTeX projects are rarely just text. They include figures, references, build
+errors, document history, source control, reviewer comments, and many small
+editing decisions. This fork brings Codex into that workflow as a project-aware
+assistant rather than a separate chat window.
 
-> [!CAUTION]
-> Overleaf Community Edition is intended for use in environments where **all** users are trusted. Community Edition is **not** appropriate for scenarios where isolation of users is required due to Sandbox Compiles not being available. When not using Sandboxed Compiles, users have full read and write access to the `sharelatex` container resources (filesystem, network, environment variables) when running LaTeX compiles.
+Use it to ask for focused edits, explain parts of a paper, clean up LaTeX,
+inspect files, make changes across a project, and keep the PDF moving while you
+stay in the Overleaf editor.
 
-For more information on Sandbox Compiles check out our [documentation](https://docs.overleaf.com/on-premises/configuration/overleaf-toolkit/server-pro-only-configuration/sandboxed-compiles).
+## Highlights
 
-## Enterprise
+### Codex In The Editor
 
-If you want help installing and maintaining Overleaf in your lab or workplace, we offer an officially supported version called [Overleaf Server Pro](https://www.overleaf.com/for/enterprises). It also includes more features for security (SSO with LDAP or SAML), administration and collaboration (e.g. tracked changes). [Find out more!](https://www.overleaf.com/for/enterprises)
+Open the Codex rail beside your source and PDF preview. Start a session, ask for
+an edit or explanation, then keep working with follow-ups in the same context.
 
-## Keeping up to date
+- Project-aware chat for LaTeX documents.
+- Session navigator for previous Codex work.
+- Follow-up messages during or after a run.
+- Slash commands for Codex status and session control.
+- `@` file references in the composer.
 
-Sign up to the [mailing list](https://mailchi.mp/overleaf.com/community-edition-and-server-pro) to get updates on Overleaf releases and development.
+### Context From What You See
 
-## Installation
+Turn selected text into prompt context without copying and pasting manually.
+Selections from the source editor or PDF preview can be attached with file and
+location information, so Codex knows what part of the project you mean.
 
-We have detailed installation instructions in the [Overleaf Toolkit](https://github.com/overleaf/toolkit/).
+### Changes You Can Trust
 
-## Upgrading
+Codex edits are auto-applied to the Overleaf project, then shown as structured,
+session-specific diffs. The Changes panel is read-only by design: it is for
+reviewing what changed, not juggling patch state.
 
-If you are upgrading from a previous version of Overleaf, please see the [Release Notes section on the Wiki](https://github.com/overleaf/overleaf/wiki#release-notes) for all of the versions between your current version and the version you are upgrading to.
+- Themed diff hunks instead of raw patch text.
+- Session-scoped change summaries.
+- Automatic PDF recompilation after edits.
+- Clickable file links in Codex responses.
 
-## Overleaf Docker Image
+### Activity That Reads Like Work
 
-This repo contains two dockerfiles, [`Dockerfile-base`](server-ce/Dockerfile-base), which builds the
-`sharelatex/sharelatex-base` image, and [`Dockerfile`](server-ce/Dockerfile) which builds the
-`sharelatex/sharelatex` (or "community") image.
+The activity stream is designed for humans, not raw event logs. Long runs fold
+intermediate steps behind a concise completion summary while keeping the user
+prompt and final answer visible.
 
-The Base image generally contains the basic dependencies like `wget`, plus `texlive`.
-We split this out because it's a pretty heavy set of
-dependencies, and it's nice to not have to rebuild all of that every time.
+- Markdown and code block rendering.
+- Syntax highlighting and compact code styling.
+- Distinct final answers.
+- Dark-mode aware Codex UI.
+- Back-to-bottom control for long sessions.
 
-The `sharelatex/sharelatex` image extends the base image and adds the actual Overleaf code
-and services.
+### Source Control Built In
 
-Use `make build-base` and `make build-community` from `server-ce/` to build these images.
+Project Git is a standalone rail panel, independent from Codex. Initialize a
+repo, import from a remote, inspect changes, commit, pull, and push from inside
+Overleaf.
 
-We use the [Phusion base-image](https://github.com/phusion/baseimage-docker)
-(which is extended by our `base` image) to provide us with a VM-like container
-in which to run the Overleaf services. Baseimage uses the `runit` service
-manager to manage services, and we add our init-scripts from the `server-ce/runit`
-folder.
+## Built For Local And Private Workflows
 
-## Contributing
+This fork is aimed at trusted local development and private team deployments.
+Codex is designed with practical guardrails for project editing, while keeping
+the deployment story simple for local and private environments. For
+production-style use, read the deployment and security notes before exposing the
+service to others.
 
-Please see the [CONTRIBUTING](CONTRIBUTING.md) file for information on contributing to the development of Overleaf.
+## Get Started
 
-## Authors
+For platform-specific Docker setup, use the deployment guide:
 
-[The Overleaf Team](https://www.overleaf.com/about)
+- [Docker Deployment Guide](doc/docker-deployment.md)
+
+For feature-specific implementation and operating notes:
+
+- [Codex App Server Deployment Notes](doc/codex-app-server-deployment.md)
+- [Project Git Integration](doc/project-git-integration.md)
+- [Codex Integration Checklist](doc/codex-app-server-integration-checklist.md)
+
+The deployment guide covers Docker builds, platform-specific compose overlays,
+credential setup, and troubleshooting.
+
+## Original Overleaf Resources
+
+This repository does not replace the upstream Overleaf documentation. Use these
+for the original Community Edition project, upgrade notes, and general Overleaf
+operations:
+
+- [Original Overleaf repository](https://github.com/overleaf/overleaf)
+- [Overleaf Toolkit](https://github.com/overleaf/toolkit/)
+- [Overleaf wiki](https://github.com/overleaf/overleaf/wiki)
+- [Official Overleaf documentation](https://docs.overleaf.com/)
+
+## Security Notice
+
+Overleaf Community Edition is intended for environments where all users are
+trusted. This fork inherits that assumption. Do not expose shared Codex host
+credentials or an unreviewed local deployment to untrusted users.
+
+For shared use, require HTTPS, restrict access, keep Codex credentials private,
+and follow the guidance in [Docker Deployment Guide](doc/docker-deployment.md).
 
 ## License
 
-The code in this repository is released under the GNU AFFERO GENERAL PUBLIC LICENSE, version 3. A copy can be found in the [`LICENSE`](LICENSE) file.
+This repository follows the upstream Overleaf license. The code is released
+under the GNU Affero General Public License, version 3. See [LICENSE](LICENSE).
 
-Copyright (c) Overleaf, 2014-2025.
+Original copyright: Overleaf, 2014-2025.

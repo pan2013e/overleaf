@@ -4,6 +4,9 @@ The Codex integration is disabled by default. Enable it only in environments
 where the `services/web` runtime has a working `codex` binary and can persist
 per-user Codex credentials securely.
 
+For end-to-end Docker setup instructions across macOS, Linux, WSL2, and remote
+Linux deployments, see `doc/docker-deployment.md`.
+
 ## Runtime Model
 
 The current implementation starts a Codex App Server child process from
@@ -66,7 +69,7 @@ Override `CODEX_NPM_PACKAGE` at build time to pin a specific package version.
 The Codex data directory must be backed by a persistent volume if users should
 stay connected across web container restarts.
 
-For local host-credential smoke tests, mount a copied host Codex credential
+For local host-credential smoke tests, mount a copied Codex credential
 directory:
 
 ```yaml
@@ -82,14 +85,15 @@ services:
       - ${OVERLEAF_CODEX_HOST_CREDENTIALS_SOURCE:-/tmp/overleaf-codex-home}:/host-codex-home:rw
 ```
 
-Do not bind-mount the real `~/.codex` directory unless its file ownership and
-permissions allow the container `www-data` user to read and write it. A safer
-local smoke-test setup is:
+Avoid bind-mounting the live `~/.codex` directory while the host Codex app is
+running. The live directory contains SQLite runtime databases that can be noisy
+or unsafe to share with the container. A minimal credential copy is enough for
+local smoke tests:
 
 ```bash
 rm -rf /tmp/overleaf-codex-home
 mkdir -p /tmp/overleaf-codex-home
-cp -a ~/.codex/. /tmp/overleaf-codex-home/
+cp ~/.codex/auth.json ~/.codex/config.toml /tmp/overleaf-codex-home/
 docker run --rm -v /tmp/overleaf-codex-home:/codex-home overleaf-codex:local \
   chown -R 33:33 /codex-home
 ```
@@ -114,3 +118,20 @@ For a later production hardening pass, consider moving Codex execution into a
 separate sidecar or runner service with a Unix socket transport. The current
 stdio child-process model is simpler and keeps the first integration private to
 `services/web`.
+
+## Relationship To Project Git
+
+Project Git is a standalone source-control feature, not part of Codex. Codex
+owns AI-assisted editing and automatically applies approved workspace changes;
+Project Git owns repository initialization, remote URLs, commits, pulls, pushes,
+and Git diff/status display.
+
+Configure Project Git separately:
+
+```text
+OVERLEAF_PROJECT_GIT_DATA_DIR=/var/lib/overleaf/project-git
+OVERLEAF_PROJECT_GIT_MAX_PROJECT_BYTES=10485760
+```
+
+See `doc/project-git-integration.md` for the current Project Git behavior and
+limits.

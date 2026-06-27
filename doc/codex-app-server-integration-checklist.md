@@ -44,14 +44,25 @@ per-user `CODEX_HOME`; the browser only talks to Overleaf.
 - [x] Add device-code login UI that displays `verificationUrl` and `userCode`.
 - [x] Add editor-side prompt panel for starting Codex runs.
 - [x] Add run progress/events display.
-- [x] Add diff review UI.
-- [x] Add apply selected changes UI.
+- [x] Add read-only change review UI with automatic apply.
+- [x] Render diffs as themed structured hunks instead of raw unified diff text.
+- [x] Add `@` workspace file references in the composer.
+- [x] Add editor/PDF selected-context chips that expand to source text only when
+  sending the prompt.
+- [x] Include cleaned source file paths and approximate locations in selected
+  context chips and sent prompt blocks.
+- [x] Normalize selected-context file labels when rendering persisted prompt
+  history so older runs do not expose editor DOM/menu text as a file path.
+- [x] Add clickable project file links in Codex Markdown responses.
+- [x] Add `/status`, `/model`, `/effort`, `/summary`, `/new`, and `/help`
+  composer commands.
 
 ## Follow-Up UX And Execution Fixes
 
 - [x] Add project-scoped Codex session history.
-- [x] Add user-controllable run parameters for model, reasoning effort,
-  reasoning summary, approval policy, sandbox mode, and auto-apply.
+- [x] Add user-controllable run parameters for model, reasoning effort, and
+  reasoning summary while enforcing workspace-write sandboxing and on-request
+  approvals on the backend.
 - [x] Replace raw event display with a human-readable trajectory stream.
 - [x] Persist each run's human-readable trajectory as `trajectory.md` in the
   run workspace directory.
@@ -61,10 +72,24 @@ per-user `CODEX_HOME`; the browser only talks to Overleaf.
   result.
 - [x] Serialize structured App Server errors and unknown trajectory items in a
   human-readable form.
-- [x] Default the local Docker compose deployment to `danger-full-access`
-  sandbox mode so Codex can run commands inside the container.
+- [x] Default the local Docker compose deployment to workspace-write sandboxing
+  with network access enabled.
 - [x] Auto-apply changed files by default so completed edit runs update the
   Overleaf project without a second manual click.
+- [x] Trigger an automatic PDF recompile after Codex-applied changes.
+- [x] Show long completed trajectories behind one collapsed `Completed in ...`
+  control per user request/run while keeping the user prompt and final answer
+  visible.
+- [x] Add a back-to-bottom control when the user scrolls away from the newest
+  activity.
+- [x] Start the Codex rail on a session navigator with a new-session composer,
+  move session switching to the title bar, and remove the Sessions tab.
+- [x] Scope the Changes tab to the active Codex session, including changed-file
+  rows and structured diffs from the session's runs.
+- [x] Allow terminal Codex sessions to be archived from the navigator.
+- [x] Suppress Grammarly UI inside the Codex composer.
+- [x] Show Codex usage limit information in `/status` when the App Server
+  exposes rate-limit data.
 - [x] Give the Codex rail a workbench-sized default/minimum width so session
   history, activity, diff, settings, and composer controls are usable.
 - [x] Avoid a restored Codex rail tab crashing the editor before
@@ -73,6 +98,15 @@ per-user `CODEX_HOME`; the browser only talks to Overleaf.
   `No activity` state.
 - [x] Suppress the generic external-update modal for Codex-applied document
   edits.
+
+## Standalone Project Git
+
+- [x] Keep Git integration independent from Codex.
+- [x] Add project-scoped Git status, init, import, remote, commit, pull, and
+  push endpoints.
+- [x] Add a standalone Source Control rail panel.
+- [x] Document Project Git configuration and current limits in
+  `doc/project-git-integration.md`.
 
 ## Verification
 
@@ -85,7 +119,7 @@ per-user `CODEX_HOME`; the browser only talks to Overleaf.
 Docker smoke evidence:
 
 - Built `overleaf-codex:local` from `server-ce/Dockerfile`; latest verified
-  image id: `sha256:a422fbe118c5c554e6103a8c1e1fd15d4a8c6ecfd60912f5e20059eb223d1325`.
+  image id: `sha256:2f24b78db0e55de1cf60d3160ef586114292002afe483bf645da205a2ab6a0fe`.
 - Recreated `sharelatex` with `docker-compose.yml` and `docker-compose.codex.yml`.
 - Verified `codex --version` inside the image: `codex-cli 0.142.2`.
 - Verified the mounted host Codex home is readable by the `www-data` web
@@ -109,6 +143,10 @@ Docker smoke evidence:
   `sha256:a422fbe118c5c554e6103a8c1e1fd15d4a8c6ecfd60912f5e20059eb223d1325`
   reached `applied`, rendered 36 trajectory entries, updated `main.tex`, and
   did not show the generic external-update modal.
+- Verified the rebuilt Chrome UI starts in the Codex session navigator, hides
+  the Sessions tab, exposes archive controls, suppresses Grammarly in the
+  composer, renders persisted selected-context labels as `main.tex`, and shows
+  active-session structured diffs in the Changes tab.
 - Exercised a real deployed Codex turn against the test project
   `6a3d8b55ac2743f0dbf9f491`: prompt
   `Write some random text in the Introduction section.` completed with status
