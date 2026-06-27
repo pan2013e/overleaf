@@ -123,4 +123,34 @@ describe('ProjectWorkspaceBuilder', function () {
       newContent: 'hello\ncodex\n',
     })
   })
+
+  it('builds structured changes from added workspace files', async function (ctx) {
+    const workspace = await ctx.ProjectWorkspaceBuilder.buildWorkspace({
+      userId: 'user-1',
+      projectId: 'project-1',
+      runId: 'run-3',
+    })
+    await fs.mkdir(Path.join(workspace.workspacePath, 'sections'), {
+      recursive: true,
+    })
+    await fs.writeFile(
+      Path.join(workspace.workspacePath, 'sections', 'new.tex'),
+      'new section\n',
+      'utf8'
+    )
+
+    const changes = await ctx.ProjectDiffBuilder.buildStructuredChanges(
+      workspace
+    )
+
+    expect(changes).to.have.length(1)
+    expect(changes[0]).to.deep.include({
+      type: 'added',
+      projectPath: '/sections/new.tex',
+      docId: null,
+      oldHash: null,
+      newHash: hashContent('new section\n'),
+      newContent: 'new section\n',
+    })
+  })
 })

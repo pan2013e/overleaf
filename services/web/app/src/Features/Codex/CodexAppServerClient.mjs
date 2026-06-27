@@ -2,14 +2,39 @@ import { EventEmitter } from 'node:events'
 import { spawn } from 'node:child_process'
 import readline from 'node:readline'
 import fs from 'node:fs/promises'
+import Path from 'node:path'
 import logger from '@overleaf/logger'
 
+function isSafeWorkspaceGrantRoot(grantRoot, allowedUserRoot) {
+  if (typeof grantRoot !== 'string' || typeof allowedUserRoot !== 'string') {
+    return false
+  }
+  const resolvedGrantRoot = Path.resolve(grantRoot)
+  const resolvedUserRoot = Path.resolve(allowedUserRoot)
+  return (
+    resolvedGrantRoot.startsWith(`${resolvedUserRoot}${Path.sep}workspaces${Path.sep}`) &&
+    resolvedGrantRoot.endsWith(`${Path.sep}workspace`)
+  )
+}
+
+function fileChangeGrantRoot(message) {
+  return message?.params?.grantRoot ?? message?.params?.grant_root
+}
+
+function isFileChangeApprovalRequest(message) {
+  return (
+    message?.method === 'item/fileChange/requestApproval' &&
+    message.id != null
+  )
+}
+
 class CodexAppServerClient extends EventEmitter {
-  constructor({ codexBin, codexHome, requestTimeoutMs }) {
+  constructor({ codexBin, codexHome, requestTimeoutMs, userRoot }) {
     super()
     this.codexBin = codexBin
     this.codexHome = codexHome
     this.requestTimeoutMs = requestTimeoutMs
+    this.userRoot = userRoot
     this.nextRequestId = 1
     this.pendingRequests = new Map()
     this.notificationLog = []
@@ -164,6 +189,9 @@ class CodexAppServerClient extends EventEmitter {
     }
 
     if (message.id != null && message.method) {
+      if (this._handleServerRequest(message)) {
+        return
+      }
       logger.warn(
         { method: message.method },
         'unsupported codex app-server request'
@@ -194,6 +222,26 @@ class CodexAppServerClient extends EventEmitter {
         this.emit(message.method, notification.params)
       }
     }
+  }
+
+  _handleServerRequest(message) {
+    if (!isFileChangeApprovalRequest(message)) {
+      return false
+    }
+    const grantRoot = fileChangeGrantRoot(message)
+    const decision = isSafeWorkspaceGrantRoot(
+      grantRoot,
+      this.userRoot
+    )
+      ? 'accept'
+      : 'decline'
+    this._send({
+      id: message.id,
+      result: {
+        decision,
+      },
+    })
+    return true
   }
 
   _handleClose(error) {

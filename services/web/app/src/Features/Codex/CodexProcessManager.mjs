@@ -39,6 +39,7 @@ async function getClient(userId) {
     codexBin: Settings.codex.bin,
     codexHome,
     requestTimeoutMs: Settings.codex.appServerRequestTimeoutMs,
+    userRoot,
   })
   client.on('close', error => {
     logger.warn({ err: error, userId }, 'codex app-server closed')

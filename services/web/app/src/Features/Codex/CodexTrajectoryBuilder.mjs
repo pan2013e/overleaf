@@ -35,6 +35,33 @@ function contentToText(content) {
     .join('\n')
 }
 
+function valueToText(value) {
+  if (typeof value === 'string') {
+    return value
+  }
+  if (!Array.isArray(value)) {
+    return ''
+  }
+  return value
+    .map(part => {
+      if (typeof part === 'string') {
+        return part
+      }
+      if (typeof part?.text === 'string') {
+        return part.text
+      }
+      if (typeof part?.summary === 'string') {
+        return part.summary
+      }
+      if (Array.isArray(part?.content)) {
+        return contentToText(part.content)
+      }
+      return ''
+    })
+    .filter(Boolean)
+    .join('\n')
+}
+
 function tokenUsageDetail(tokenUsage) {
   const total = tokenUsage?.total
   if (!total) {
@@ -99,7 +126,9 @@ function buildItemEntry(event, phase) {
     entry.detail = truncate(item.text, 4000)
   } else if (item.type === 'reasoning') {
     entry.detail = truncate(
-      item.summary || item.text || contentToText(item.content),
+      valueToText(item.summary) ||
+        valueToText(item.text) ||
+        contentToText(item.content),
       2000
     )
   } else if (item.type === 'commandExecution') {

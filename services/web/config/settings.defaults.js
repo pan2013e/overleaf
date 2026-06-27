@@ -841,13 +841,25 @@ module.exports = {
     model: process.env.OVERLEAF_CODEX_MODEL,
     reasoningEffort: process.env.OVERLEAF_CODEX_REASONING_EFFORT || 'medium',
     reasoningSummary: process.env.OVERLEAF_CODEX_REASONING_SUMMARY || 'auto',
-    approvalPolicy: process.env.OVERLEAF_CODEX_APPROVAL_POLICY || 'never',
+    approvalPolicy: process.env.OVERLEAF_CODEX_APPROVAL_POLICY || 'on-request',
     sandboxMode: process.env.OVERLEAF_CODEX_SANDBOX_MODE || 'workspace-write',
+    networkAccess: process.env.OVERLEAF_CODEX_NETWORK_ACCESS !== 'false',
+    blockedCommandPatterns: process.env.OVERLEAF_CODEX_BLOCKED_COMMAND_PATTERNS,
     autoApply: process.env.OVERLEAF_CODEX_AUTO_APPLY !== 'false',
     maxDocs: intFromEnv('OVERLEAF_CODEX_MAX_DOCS', 200),
     maxProjectBytes: intFromEnv(
       'OVERLEAF_CODEX_MAX_PROJECT_BYTES',
       2 * 1024 * 1024
+    ),
+  },
+
+  projectGit: {
+    dataDir:
+      process.env.OVERLEAF_PROJECT_GIT_DATA_DIR ||
+      Path.resolve(__dirname, '../data/project-git'),
+    maxProjectBytes: intFromEnv(
+      'OVERLEAF_PROJECT_GIT_MAX_PROJECT_BYTES',
+      10 * 1024 * 1024
     ),
   },
 

@@ -24,6 +24,15 @@ describe('ProjectPatchApplier', function () {
         getDoc: sinon.stub().resolves({
           lines: ['before'],
         }),
+        getAllDocs: sinon.stub().resolves({}),
+      },
+    }
+    ctx.ProjectEntityUpdateHandler = {
+      promises: {
+        upsertDocWithPath: sinon.stub().resolves({
+          doc: { _id: { toString: () => 'doc-added' } },
+          isNew: true,
+        }),
       },
     }
 
@@ -37,6 +46,12 @@ describe('ProjectPatchApplier', function () {
       '../../../../app/src/Features/Project/ProjectEntityHandler.mjs',
       () => ({
         default: ctx.ProjectEntityHandler,
+      })
+    )
+    vi.doMock(
+      '../../../../app/src/Features/Project/ProjectEntityUpdateHandler.mjs',
+      () => ({
+        default: ctx.ProjectEntityUpdateHandler,
       })
     )
     vi.doMock(
@@ -82,7 +97,7 @@ describe('ProjectPatchApplier', function () {
       ctx.docId,
       ctx.userId,
       ['after', 'line two'],
-      'codex'
+      { kind: 'codex' }
     )
   })
 
@@ -110,5 +125,60 @@ describe('ProjectPatchApplier', function () {
 
     expect(ctx.DocumentUpdaterHandler.promises.setDocument).not.to.have.been
       .called
+  })
+
+  it('creates added docs through project entity updates', async function (ctx) {
+    const result = await ctx.ProjectPatchApplier.applyChanges({
+      projectId: ctx.projectId,
+      userId: ctx.userId,
+      manifest: { docs: {} },
+      changes: [
+        {
+          type: 'added',
+          projectPath: '/sections/new.tex',
+          newContent: 'new section\nline two',
+        },
+      ],
+    })
+
+    expect(result.applied).to.deep.equal([
+      {
+        projectPath: '/sections/new.tex',
+        docId: 'doc-added',
+      },
+    ])
+    expect(
+      ctx.ProjectEntityUpdateHandler.promises.upsertDocWithPath
+    ).to.have.been.calledWith(
+      ctx.projectId,
+      '/sections/new.tex',
+      ['new section', 'line two'],
+      { kind: 'codex' },
+      ctx.userId
+    )
+  })
+
+  it('rejects added docs when the project path now exists', async function (ctx) {
+    ctx.ProjectEntityHandler.promises.getAllDocs.resolves({
+      '/sections/new.tex': { _id: 'doc-existing' },
+    })
+
+    await expect(
+      ctx.ProjectPatchApplier.applyChanges({
+        projectId: ctx.projectId,
+        userId: ctx.userId,
+        manifest: { docs: {} },
+        changes: [
+          {
+            type: 'added',
+            projectPath: '/sections/new.tex',
+            newContent: 'new section',
+          },
+        ],
+      })
+    ).to.be.rejectedWith('document already exists since Codex run')
+
+    expect(ctx.ProjectEntityUpdateHandler.promises.upsertDocWithPath).not.to
+      .have.been.called
   })
 })

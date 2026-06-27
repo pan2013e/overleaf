@@ -4,8 +4,13 @@ services:
     environment:
       OVERLEAF_CODEX_ENABLED: "true"
       OVERLEAF_CODEX_DATA_DIR: /var/lib/overleaf/codex
+      OVERLEAF_PROJECT_GIT_DATA_DIR: /var/lib/overleaf/project-git
       OVERLEAF_CODEX_HOST_CREDENTIALS_HOME: /host-codex-home
-      OVERLEAF_CODEX_SANDBOX_MODE: danger-full-access
+      OVERLEAF_CODEX_APPROVAL_POLICY: on-request
+      OVERLEAF_CODEX_SANDBOX_MODE: workspace-write
+      OVERLEAF_CODEX_NETWORK_ACCESS: "true"
+      OVERLEAF_CODEX_BLOCKED_COMMAND_PATTERNS: >-
+        ["\\bsudo\\b","\\b(?:docker|podman|kubectl|mount|umount)\\b","\\b(?:ssh|scp|rsync)\\b","\\b(?:curl|wget)\\b[^\\n|;&]*(?:\\||;)\\s*(?:sh|bash|zsh)\\b","\\brm\\s+-[^\\n]*[rf][^\\n]*\\s+/(?:\\s|$)","\\b(?:chmod|chown)\\s+-R\\b[^\\n]*\\s+/","\\b(?:npm|pnpm|yarn)\\s+(?:-g\\s+)?(?:install|add)\\b[^\\n]*\\s+-g\\b"]
       OVERLEAF_CODEX_AUTO_APPLY: "true"
       OVERLEAF_INVITE_TOKEN_SECRET: "local-codex-smoke-invite-token-secret-change-me"
       SANDBOXED_COMPILES: "false"
