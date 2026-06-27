@@ -10,6 +10,7 @@ import FileTreeOutlinePanel from '@/features/file-tree/components/file-tree-outl
 import ChatPane from '@/features/chat/components/chat-pane'
 import ChatIndicator from '@/features/chat/components/chat-indicator'
 import CodexPanel from '@/features/codex/components/codex-panel'
+import ProjectGitPanel from '@/features/project-git/components/project-git-panel'
 import getMeta from '@/utils/meta'
 import classNames from 'classnames'
 import IntegrationsPanel from '@/features/integrations-panel/integrations-panel'
@@ -146,6 +147,13 @@ export const RailLayout = () => {
         title: 'Codex',
         component: <CodexPanel />,
         hide: !codexEnabled,
+        disabled: view !== 'editor',
+      },
+      {
+        key: 'git',
+        icon: 'call_split',
+        title: 'Source Control',
+        component: <ProjectGitPanel />,
         disabled: view !== 'editor',
       },
       ...moduleRailEntries,
